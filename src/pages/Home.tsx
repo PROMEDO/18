@@ -602,9 +602,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       onLogout?.();
                     }}
                     style={{
-                      background: 'rgba(239, 68, 68, 0.1)',
-                      border: '1px solid rgba(239, 68, 68, 0.35)',
-                      color: '#ef4444',
                       fontWeight: 800,
                       borderRadius: '999px',
                     }}
@@ -784,7 +781,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  boxShadow: session?.admin ? undefined : '0 4px 16px rgba(27, 94, 74, 0.4)',
                 }}
               >
                 {isRtl ? (
@@ -816,9 +812,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  background: 'rgba(239, 68, 68, 0.08)',
-                  border: '1px solid rgba(239, 68, 68, 0.35)',
-                  color: '#ef4444',
                 }}
               >
                 {isRtl ? (
