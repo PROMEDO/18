@@ -7786,24 +7786,13 @@ async function ensureWebPushVapidKeys() {
   if (cachedVapidKeys) return cachedVapidKeys;
   if (vapidInitPromise) return vapidInitPromise;
   vapidInitPromise = (async () => {
-    const envPublic = String(process.env.VAPID_PUBLIC_KEY || "").trim();
-    const envPrivate = String(process.env.VAPID_PRIVATE_KEY || "").trim();
-    const envSubject = String(process.env.VAPID_SUBJECT || "").trim() || (process.env.APP_URL && process.env.APP_URL.startsWith("https://") ? process.env.APP_URL : "mailto:support@menuplus.iq");
-    if (envPublic && envPrivate) {
-      cachedVapidKeys = {
-        publicKey: envPublic,
-        privateKey: envPrivate,
-        subject: envSubject,
-        createdAt: Date.now()
-      };
-      setVapidDetails(cachedVapidKeys.subject, cachedVapidKeys.publicKey, cachedVapidKeys.privateKey);
-      return cachedVapidKeys;
-    }
+    const cleanDomain = String(process.env.BASE_DOMAIN || "").toLowerCase().trim().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+    const defaultSubject = process.env.APP_URL && process.env.APP_URL.startsWith("https://") ? process.env.APP_URL : cleanDomain ? `mailto:support@${cleanDomain}` : "mailto:support@menuplus.iq";
     const existing = await getInternalStoreItem(VAPID_KEYS_STORE_KEY);
     if (existing && existing.publicKey && existing.privateKey) {
       cachedVapidKeys = existing;
       setVapidDetails(
-        existing.subject || envSubject,
+        existing.subject || defaultSubject,
         existing.publicKey,
         existing.privateKey
       );
@@ -7813,7 +7802,7 @@ async function ensureWebPushVapidKeys() {
     const record = {
       publicKey: generated.publicKey,
       privateKey: generated.privateKey,
-      subject: envSubject,
+      subject: defaultSubject,
       createdAt: Date.now()
     };
     await setInternalStoreItem(VAPID_KEYS_STORE_KEY, record);
